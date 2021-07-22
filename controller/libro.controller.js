@@ -3,13 +3,14 @@ import model from "../models";
 export default {
   agregar: async (req, res, next) => {
     try {
-      const { nombre, autor, editorial, edicion } = req.body;
+      const { nombre, autor, editorial, edicion, enlace } = req.body;
 
       const libros = new model.Libro({
         nombre,
         autor,
         editorial,
         edicion,
+        enlace,
       });
 
       const registro = await libros.save();
@@ -57,39 +58,19 @@ export default {
     }
   },
 
-  eliminar:async(req, res, next)=>{
-      try {
-
-        const eliminarPersona= await model.Libro.findByIdAndDelete(req.params.id);
+  eliminar: async (req, res, next) => {
+    try{
+        const eliminarLibro = await model.Libro.findByIdAndDelete(req.params.id);
         res.status(200).send({
-            message: "La informacion ha sido eliminada correctamente"
+            message: "La informacion ha sido eliminado correctamente"
         });
-          
-      } catch (error) {
-          res.status(500).send({
-              message: "El id para eliminar persona no existe"
-          });
+    } catch (error) {
+        res.status(500).send({
+            message: "La id para eliminar no existe",
+        });
 
-          next(error);
-      }
-  },
+        next(error);
+    }
+},
 
-  Actualizar: async(req, res, next)=>{
-      try {
-          const {nombre, autor, editorial, edicion}=req.body;
-
-          const actualizarPersona={
-              nombre,autor,editorial,edicion
-          }
-
-          const datosActuales = await model.Libro.findByIdAndUpdate(req.params.id, actualizarPersona);
-          res.json(actualizarPersona);
-
-      } catch (error) {
-          res.status(500).send({
-              message:"Ocurrio un error al tratar de actualizar"
-          });
-          next(error);
-      }
-  }
 };
